@@ -18,7 +18,7 @@ public class bringPaper {
 	public static void SolrQueryData() throws SolrServerException, IOException {
 	    	SolrQuery query = new SolrQuery();
 		    query.setQuery("*:*");
-		    query.setRows(1000);
+		    query.setRows(100);
 		
 		    QueryResponse rsp = solr.query(query);
 		    SolrDocumentList docs=rsp.getResults(); 
