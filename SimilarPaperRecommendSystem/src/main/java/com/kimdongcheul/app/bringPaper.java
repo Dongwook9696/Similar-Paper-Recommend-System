@@ -15,7 +15,7 @@ import org.jsoup.Jsoup;
 
 public class bringPaper {
 	
-	public static String url = "http://164.125.35.25:8983/solr/abstract"; 
+	public static String url = "http://164.125.35.25:8983/solr/abstract";  
     public static SolrClient solr = new HttpSolrClient(url); 
 
     public static void AbstractExtraction() throws IOException {
