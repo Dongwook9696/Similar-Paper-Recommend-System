@@ -9,12 +9,13 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.SolrInputDocument;
 import org.jsoup.Jsoup;
 
 
 public class bringPaper {
 	// TODO Auto-generated method stub
-	public static String url = "http://164.125.35.25:8983/solr/pubmedcontent";
+	public static String url = "http://164.125.35.25:8983/solr/abstract";
     public static SolrClient solr = new HttpSolrClient(url); 
 
 	public static void SolrQueryData() throws SolrServerException, IOException {
@@ -30,8 +31,27 @@ public class bringPaper {
 		}
 	}
 	
+	public static void SolrPutData(String a) {
+		SolrInputDocument solrDoc = new SolrInputDocument();
+		String s = "10.1016_j.phrp.2015.12.006.html";
+        solrDoc.addField("id", s);
+        solrDoc.addField("title", a);
+        
+        try {
+			solr.add(solrDoc);
+			solr.commit();
+		} catch (SolrServerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       
+	}
+	
 	// Abstract 추출 함수
-	public static void AbstractText(String text) {
+	public static String AbstractText(String text) {
 		String Abs = "bstract";
 		int checker = 0;
 		int cnt = 0;
@@ -88,17 +108,18 @@ public class bringPaper {
 //				}
 				
 				// Abs를 DB에 저장해야함 
-				// return Abs -> 요약문 뽑아낸것을 반환
-				System.out.print(Abs);
-				break;
+				return Abs; // -> 요약문 뽑아낸것을 반환
+//				System.out.print(Abs);
+//				break;
 			}
 			
 		}
 //		cnt += 1;
+		return "aa";
 	}
 	public static String crawling() throws IOException {
 					  	
-		String content = Jsoup.parse(new File("C:\\Users\\hdw96\\eclipse-workspace\\SimilarPaper\\SimilarPaperRecommendSystem\\src\\main\\java\\com\\kimdongcheul\\app\\0\\10.1016_j.phrp.2015.12.006.html"), "UTF-8").toString();
+		String content = Jsoup.parse(new File("C:\\gp\\Similar-Paper-Recommend-System\\SimilarPaperRecommendSystem\\target\\classes\\com\\kimdongcheul\\app\\0\\10.1016_j.phrp.2015.12.006.html"), "UTF-8").toString();
 		content = Jsoup.parse(content).wholeText();
 //		System.out.print(content);
 		
