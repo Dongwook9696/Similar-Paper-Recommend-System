@@ -14,7 +14,7 @@ import org.jsoup.Jsoup;
 
 
 public class bringPaper {
-	// TODO Auto-generated method stub
+	
 	public static String url = "http://164.125.35.25:8983/solr/abstract";
     public static SolrClient solr = new HttpSolrClient(url); 
 
@@ -53,16 +53,16 @@ public class bringPaper {
 			solr.add(solrDoc);
 			solr.commit();
 		} catch (SolrServerException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
        
 	}
 	
-	// Abstract ���� �Լ�
+	
 	public static String AbstractText(String text) {
 		String Abs = "bstract";
 		int checker = 0;
