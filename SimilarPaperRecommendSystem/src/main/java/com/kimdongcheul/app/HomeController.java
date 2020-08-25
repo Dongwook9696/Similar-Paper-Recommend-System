@@ -39,7 +39,8 @@ public class HomeController {
 		
 		str = bringPaper.crawling();
 //		System.out.print(str);
-		bringPaper.AbstractText(str);
+		String a = bringPaper.AbstractText(str);
+		bringPaper.SolrPutData(a);
 		return "home";
 	}
 	
