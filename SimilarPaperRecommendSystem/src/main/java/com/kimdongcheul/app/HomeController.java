@@ -37,10 +37,8 @@ public class HomeController {
 		
 		model.addAttribute("serverTime", formattedDate );
 		
-		str = bringPaper.crawling();
-//		System.out.print(str);
-		String a = bringPaper.AbstractText(str);
-		bringPaper.SolrPutData(a);
+		bringPaper.AbstractExtraction();
+		
 		return "home";
 	}
 	

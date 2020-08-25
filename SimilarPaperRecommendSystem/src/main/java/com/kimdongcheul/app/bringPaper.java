@@ -18,6 +18,19 @@ public class bringPaper {
 	public static String url = "http://164.125.35.25:8983/solr/abstract";
     public static SolrClient solr = new HttpSolrClient(url); 
 
+    public static void AbstractExtraction() throws IOException {
+		
+    	File files[] = getFileList("/Users/gukcheolchoi/Downloads/0");
+    	String filenames[] = getFileNameList("/Users/gukcheolchoi/Downloads/0");
+    	
+		for(int i = 0; i < files.length; i++) {
+			String content = Jsoup.parse(files[i], "UTF-8").toString();
+			content = Jsoup.parse(content).wholeText();
+			String a = AbstractText(content);
+			SolrPutData(filenames[i], a);
+		}
+	}
+
 	public static void SolrQueryData() throws SolrServerException, IOException {
     	SolrQuery query = new SolrQuery();
 	    query.setQuery("*:*");
@@ -31,11 +44,10 @@ public class bringPaper {
 		}
 	}
 	
-	public static void SolrPutData(String a) {
+	public static void SolrPutData(String filename, String abs) {
 		SolrInputDocument solrDoc = new SolrInputDocument();
-		String s = "10.1016_j.phrp.2015.12.006.html";
-        solrDoc.addField("id", s);
-        solrDoc.addField("title", a);
+        solrDoc.addField("id", filename);
+        solrDoc.addField("title", abs);
         
         try {
 			solr.add(solrDoc);
@@ -50,7 +62,7 @@ public class bringPaper {
        
 	}
 	
-	// Abstract ÃßÃâ ÇÔ¼ö
+	// Abstract ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 	public static String AbstractText(String text) {
 		String Abs = "bstract";
 		int checker = 0;
@@ -60,7 +72,7 @@ public class bringPaper {
 			if (text.charAt(i) == 'A') {
 
 				int n=0;
-				for(int j=i+1; j<i+8; j++) { // A µÚÀÇ ¹®ÀÚ°¡ bstractÀÎÁö °Ë»ç
+				for(int j=i+1; j<i+8; j++) { // A ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú°ï¿½ bstractï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
 					if(text.charAt(j) != Abs.charAt(n))						
 						break;
 					else
@@ -68,20 +80,20 @@ public class bringPaper {
 
 				}
 				
-				if(n == 7) { // Abstract ¹®ÀÚ¿­ Ã£À½
+				if(n == 7) { // Abstract ï¿½ï¿½ï¿½Ú¿ï¿½ Ã£ï¿½ï¿½
 
 					if(text.charAt(i + 8) =='\n') {
 						String s = "";
-						for(int r=i+9; r<text.length(); r++) {	// Abstract ¹Ø¿¡ °³Çü µî °ø¹éÀÌ ÀÖ°í ±× ´ÙÀ½ ³»¿ëÀÌ ¿Ã ¼ö ÀÖ±â ¶§¹®¿¡ °ø¹éÁ¦°Å
+						for(int r=i+9; r<text.length(); r++) {	// Abstract ï¿½Ø¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 							if(text.charAt(r) == '\n' || text.charAt(r) == ' ' || text.charAt(r) == '\t')
 								i +=1;
 							else
 								break;
 						
-							// ¿¹¿Ü»çÇ× Ãß°¡ÇØ¾ßÇÔ
+							// ï¿½ï¿½ï¿½Ü»ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
 						}
 						
-						for(int r=i+9; r<text.length(); r++) {	// ¹®ÀÚ¿­ s¿¡ ¿ä¾à¹® ´ÙÀ½ °³ÇàÀÌ ¿Ã¶§Áö ¿ä¾à¹® ÀúÀå
+						for(int r=i+9; r<text.length(); r++) {	// ï¿½ï¿½ï¿½Ú¿ï¿½ sï¿½ï¿½ ï¿½ï¿½à¹® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¶ï¿½ï¿½ï¿½ ï¿½ï¿½à¹® ï¿½ï¿½ï¿½ï¿½
 							if(text.charAt(r) != '\n')
 								s += text.charAt(r);
 							else
@@ -92,10 +104,10 @@ public class bringPaper {
 				}
 			}
 			
-			// else if ¿¹¿Ü »çÇ× Ãß°¡ÇØ¾ßÇÔ
+			// else if ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
 			
-			if(!Abs.equals("bstract")) {	// Abs¿¡ ¿ä¾à¹®ÀÌ¶ó°í »ý°¢µÇ´Â ¹®ÀÚ¿­ÀÌ ´ã°ÜÀÖÀ½
-//				if(Abs.length()<15) {	// ³í¹® Áß ¿ä¾à¹® ÀÚÃ¼°¡ backgroun, Objective, Results µîÀÇ ±¸¼ºÀ¸·Î ÀÌ·ç¾îÁ® ¿¹¿Ü°¡ ¹ß»ýÇÒ ¼ö ÀÖÀ½
+			if(!Abs.equals("bstract")) {	// Absï¿½ï¿½ ï¿½ï¿½à¹®ï¿½Ì¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//				if(Abs.length()<15) {	// ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½à¹® ï¿½ï¿½Ã¼ï¿½ï¿½ backgroun, Objective, Results ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ü°ï¿½ ï¿½ß»ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 //					int cnt2 = cnt +9;
 //					Abs = "";
 //					for(int r = cnt+9; r<text.length(); r++) {
@@ -107,8 +119,8 @@ public class bringPaper {
 //					}
 //				}
 				
-				// Abs¸¦ DB¿¡ ÀúÀåÇØ¾ßÇÔ 
-				return Abs; // -> ¿ä¾à¹® »Ì¾Æ³½°ÍÀ» ¹ÝÈ¯
+				// Absï¿½ï¿½ DBï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½ 
+				return Abs; // -> ï¿½ï¿½à¹® ï¿½Ì¾Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
 //				System.out.print(Abs);
 //				break;
 			}
@@ -117,13 +129,18 @@ public class bringPaper {
 //		cnt += 1;
 		return "aa";
 	}
-	public static String crawling() throws IOException {
-					  	
-		String content = Jsoup.parse(new File("C:\\gp\\Similar-Paper-Recommend-System\\SimilarPaperRecommendSystem\\target\\classes\\com\\kimdongcheul\\app\\0\\10.1016_j.phrp.2015.12.006.html"), "UTF-8").toString();
-		content = Jsoup.parse(content).wholeText();
-//		System.out.print(content);
-		
-		return content;
+	
+	
+	public static File[] getFileList(String path) {
+		File dir = new File(path);
+		File files[] = dir.listFiles();
+		return files;
+	}
+	
+	public static String[] getFileNameList(String path) {
+		File dir = new File(path);
+		String[] filenames = dir.list();
+		return filenames;
 	}
 
 }
