@@ -19,15 +19,18 @@ public class bringPaper {
     public static SolrClient solr = new HttpSolrClient(url); 
 
     public static void AbstractExtraction() throws IOException {
-		
-    	File files[] = getFileList("/Users/gukcheolchoi/Downloads/0");
-    	String filenames[] = getFileNameList("/Users/gukcheolchoi/Downloads/0");
-    	
-		for(int i = 0; i < files.length; i++) {
+    	File files[] = getFileList("C:\\Users\\hdw96\\Downloads\\0");
+    	String filenames[] = getFileNameList("C:\\Users\\hdw96\\Downloads\\0");
+
+    	for(int i = 0; i < files.length; i++) {
+			
 			String content = Jsoup.parse(files[i], "UTF-8").toString();
 			content = Jsoup.parse(content).wholeText();
 			String a = AbstractText(content);
-			SolrPutData(filenames[i], a);
+			
+			if(!a.equals("aa"))
+				SolrPutData(filenames[i], a);
+			
 		}
 	}
 
@@ -47,7 +50,7 @@ public class bringPaper {
 	public static void SolrPutData(String filename, String abs) {
 		SolrInputDocument solrDoc = new SolrInputDocument();
         solrDoc.addField("id", filename);
-        solrDoc.addField("title", abs);
+        solrDoc.addField("abstract", abs);
         
         try {
 			solr.add(solrDoc);
@@ -65,14 +68,12 @@ public class bringPaper {
 	
 	public static String AbstractText(String text) {
 		String Abs = "bstract";
-		int checker = 0;
-		int cnt = 0;
 		
 		for(int i=0; i<text.length(); i++) {
 			if (text.charAt(i) == 'A') {
 
 				int n=0;
-				for(int j=i+1; j<i+8; j++) { // A ���� ���ڰ� bstract���� �˻�
+				for(int j=i+1; j<i+8; j++) { 
 					if(text.charAt(j) != Abs.charAt(n))						
 						break;
 					else
@@ -80,20 +81,20 @@ public class bringPaper {
 
 				}
 				
-				if(n == 7) { // Abstract ���ڿ� ã��
+				if(n == 7) { 
 
 					if(text.charAt(i + 8) =='\n') {
 						String s = "";
-						for(int r=i+9; r<text.length(); r++) {	// Abstract �ؿ� ���� �� ������ �ְ� �� ���� ������ �� �� �ֱ� ������ ��������
+						for(int r=i+9; r<text.length(); r++) {	
 							if(text.charAt(r) == '\n' || text.charAt(r) == ' ' || text.charAt(r) == '\t')
 								i +=1;
 							else
 								break;
 						
-							// ���ܻ��� �߰��ؾ���
+							
 						}
 						
-						for(int r=i+9; r<text.length(); r++) {	// ���ڿ� s�� ��๮ ���� ������ �ö��� ��๮ ����
+						for(int r=i+9; r<text.length(); r++) {	
 							if(text.charAt(r) != '\n')
 								s += text.charAt(r);
 							else
@@ -101,26 +102,42 @@ public class bringPaper {
 						}
 						Abs = s;
 					}
+					
+//					else if(text.substring(i-6, i).equals("Go to:")) {
+//						int cnt2 = i + 8;
+//						Abs = "";
+//						for(int r = i+8; i<text.length(); i++) {
+//							if(text.substring(cnt2, cnt2 + 6).equals("Go to:"))
+//								break;
+//							Abs += text.charAt(r);
+//							cnt2 += 1;
+//						}
+//						System.out.println(Abs);
+//					}
+					
+//					else if(text.charAt(i-1) == '\n' && text.charAt(i+9) != '\n' && text.charAt(i+9) != ' ' && text.charAt(i+9) != '\t') {
+//						String s = "";
+//						for(int r = i+9; r<text.length(); i++) {
+//							if(text.charAt(r) != '\n')
+//								s += text.charAt(r);
+//							else
+//								break;
+//						}
+//						Abs = s;
+//						System.out.println(Abs);
+//					}
 				}
 			}
 			
-			// else if ���� ���� �߰��ؾ���
 			
-			if(!Abs.equals("bstract")) {	// Abs�� ��๮�̶�� �����Ǵ� ���ڿ��� �������
-//				if(Abs.length()<15) {	// �� �� ��๮ ��ü�� backgroun, Objective, Results ���� �������� �̷���� ���ܰ� �߻��� �� ����
-//					int cnt2 = cnt +9;
-//					Abs = "";
-//					for(int r = cnt+9; r<text.length(); r++) {
-//						if(text.substring(cnt2, cnt2).equals("Introduction"))
-//							break;
-//						
-//						Abs += text.charAt(r);
-//						cnt2+=1;
-//					}
-//				}
+			
+			if(!Abs.equals("bstract")) {	
+				if(Abs.length()<30) {	
+					Abs = "aa";
+				}
 				
-				// Abs�� DB�� �����ؾ��� 
-				return Abs; // -> ��๮ �̾Ƴ����� ��ȯ
+				 
+				return Abs; 
 //				System.out.print(Abs);
 //				break;
 			}
