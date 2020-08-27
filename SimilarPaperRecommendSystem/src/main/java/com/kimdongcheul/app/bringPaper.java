@@ -19,35 +19,39 @@ public class bringPaper {
     public static SolrClient solr = new HttpSolrClient(url); 
 
     public static void AbstractExtraction() throws IOException {
-		
-    	File files[] = getFileList("/Users/gukcheolchoi/Downloads/0");
-    	String filenames[] = getFileNameList("/Users/gukcheolchoi/Downloads/0");
-    	
-		for(int i = 0; i < files.length; i++) {
+    	File files[] = getFileList("C:\\Users\\chlgy\\Downloads\\0");
+    	String filenames[] = getFileNameList("C:\\Users\\chlgy\\Downloads\\0");
+
+
+    	int cnt = 0;
+    	for(int i = 0; i < files.length; i++) {
 			String content = Jsoup.parse(files[i], "UTF-8").toString();
 			content = Jsoup.parse(content).wholeText();
 			String a = AbstractText(content);
-			SolrPutData(filenames[i], a);
+			System.out.println(filenames[i] + " : " + a);
+			if(!a.equals("no_Abstract"))
+				cnt++;
+			
 		}
-	}
-
-	public static void SolrQueryData() throws SolrServerException, IOException {
-    	SolrQuery query = new SolrQuery();
-	    query.setQuery("*:*");
-	    query.setRows(100);
-	
-	    QueryResponse rsp = solr.query(query);
-	    SolrDocumentList docs=rsp.getResults(); 
-	    for(int i=0;i<docs.getNumFound();i++){
-	        System.out.println(docs.get(i));
-	    
-		}
+		/*
+    	int cnt = 0;
+    	File f = new File("C://Users//chlgy//Downloads//0//10.1007_s13139-015-0373-x.html");
+    	String content = Jsoup.parse(f, "UTF-8").toString();
+    	content = Jsoup.parse(content).wholeText();
+    	System.out.println(content);
+		String a = AbstractText(content);
+		System.out.println("-------------------------------------------------------");
+		System.out.println(a);
+		if(!a.equals("no_Abstract"))
+			cnt++;
+		*/
+    	System.out.println(cnt);
 	}
 	
 	public static void SolrPutData(String filename, String abs) {
 		SolrInputDocument solrDoc = new SolrInputDocument();
         solrDoc.addField("id", filename);
-        solrDoc.addField("title", abs);
+        solrDoc.addField("abstract", abs);
         
         try {
 			solr.add(solrDoc);
@@ -62,72 +66,108 @@ public class bringPaper {
        
 	}
 	
+	public static boolean lengthCheck(String Abs) {
+		if(Abs.length() < 80) return false;
+		return true;
+	}
 	
 	public static String AbstractText(String text) {
-		String Abs = "bstract";
-		int checker = 0;
-		int cnt = 0;
+		String abs = "bstract";
+		String ABS = "BSTRACT";
 		
-		for(int i=0; i<text.length(); i++) {
+		String Abstract = "no_Abstract";
+		
+		for(int i=0; i < text.length()-9; i++) {
+			if(lengthCheck(Abstract))
+				return Abstract;
+			
+			String Abs_temp = "";
 			if (text.charAt(i) == 'A') {
-
 				int n=0;
-				for(int j=i+1; j<i+8; j++) { // A ���� ���ڰ� bstract���� �˻�
-					if(text.charAt(j) != Abs.charAt(n))						
+				for(int j=i+1; j<i+8; j++) { 
+					if(text.charAt(j) != abs.charAt(n) && text.charAt(j) != ABS.charAt(n))						
 						break;
-					else
-						n+=1;
-
+					else n+=1;
 				}
 				
-				if(n == 7) { // Abstract ���ڿ� ã��
-
-					if(text.charAt(i + 8) =='\n') {
-						String s = "";
-						for(int r=i+9; r<text.length(); r++) {	// Abstract �ؿ� ���� �� ������ �ְ� �� ���� ������ �� �� �ֱ� ������ ��������
+				if(n == 7) {
+					if(text.charAt(i + 8) =='\n' || text.charAt(i+8) == ' ') {
+						for(int r=i+9; r<text.length(); r++) {	
 							if(text.charAt(r) == '\n' || text.charAt(r) == ' ' || text.charAt(r) == '\t')
-								i +=1;
-							else
-								break;
-						
-							// ���ܻ��� �߰��ؾ���
+								i++;
+							else break;
 						}
 						
-						for(int r=i+9; r<text.length(); r++) {	// ���ڿ� s�� ��๮ ���� ������ �ö��� ��๮ ����
+						if(text.substring(i+9,i+19).equals("Background")) {
+							Abstract = "";
+							for(int r=i+9; r<text.length(); r++) {	
+								if(r+13 == text.length()-1) {
+									Abstract = "no_Abstract";
+									return Abstract;
+								}
+								if(text.substring(r,r+12).equals("Introduction") || text.substring(r,r+12).equals("INTRODUCTION"))
+									break;
+								if(text.charAt(r) != '\n')
+									Abstract += text.charAt(r);
+							}
+							return Abstract;
+						}else if(text.substring(i+9,i+18).equals("Objective")) {
+							Abstract = "";
+							for(int r=i+9; r<text.length(); r++) {	
+								if(r+13 == text.length()-1) {
+									Abstract = "no_Abstract";
+									return Abstract;
+								}
+								if(text.substring(r,r+12).equals("Introduction") || text.substring(r,r+12).equals("INTRODUCTION"))
+									break;
+								if(text.charAt(r) != '\n')
+									Abstract += text.charAt(r);
+							}
+							return Abstract;
+						}
+						else if(text.substring(i+9,i+16).equals("Purpose")) {
+							Abstract = "";
+							for(int r=i+9; r<text.length(); r++) {	
+								if(r+13 == text.length()-1) {
+									Abstract = "no_Abstract";
+									return Abstract;
+								}
+								if(text.substring(r,r+12).equals("Introduction") || text.substring(r,r+12).equals("INTRODUCTION"))
+									break;
+								if(text.charAt(r) != '\n')
+									Abstract += text.charAt(r);
+							}
+							return Abstract;
+						}
+
+						
+						
+						for(int r=i+9; r<text.length(); r++) {	
 							if(text.charAt(r) != '\n')
-								s += text.charAt(r);
-							else
-								break;
+								Abs_temp += text.charAt(r);
+							else break;
 						}
-						Abs = s;
+						if(lengthCheck(Abs_temp)) {
+							Abstract = Abs_temp;
+						}
+					}
+					else if(text.substring(i-6, i).equals("Go to:")) {
+						int pos = i + 8;
+						for(int r = i+8; i<text.length(); i++) {
+							if(text.substring(pos, pos + 6).equals("Go to:"))
+								break;
+							Abs_temp += text.charAt(r);
+							pos += 1;
+						}
+
+						if(lengthCheck(Abs_temp)) {
+							Abstract = Abs_temp;
+						}
 					}
 				}
 			}
-			
-			// else if ���� ���� �߰��ؾ���
-			
-			if(!Abs.equals("bstract")) {	// Abs�� ��๮�̶�� �����Ǵ� ���ڿ��� �������
-//				if(Abs.length()<15) {	// �� �� ��๮ ��ü�� backgroun, Objective, Results ���� �������� �̷���� ���ܰ� �߻��� �� ����
-//					int cnt2 = cnt +9;
-//					Abs = "";
-//					for(int r = cnt+9; r<text.length(); r++) {
-//						if(text.substring(cnt2, cnt2).equals("Introduction"))
-//							break;
-//						
-//						Abs += text.charAt(r);
-//						cnt2+=1;
-//					}
-//				}
-				
-				// Abs�� DB�� �����ؾ��� 
-				return Abs; // -> ��๮ �̾Ƴ����� ��ȯ
-//				System.out.print(Abs);
-//				break;
-			}
-			
 		}
-//		cnt += 1;
-		return "aa";
+		return Abstract;
 	}
 	
 	
