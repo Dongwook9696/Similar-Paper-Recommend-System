@@ -19,8 +19,8 @@ public class bringPaper {
     public static SolrClient solr = new HttpSolrClient(url); 
 
     public static void AbstractExtraction() throws IOException {
-    	File files[] = getFileList("C:\\Users\\chlgy\\Downloads\\0");
-    	String filenames[] = getFileNameList("C:\\Users\\chlgy\\Downloads\\0");
+    	File files[] = getFileList("C:\\3");
+    	String filenames[] = getFileNameList("C:\\3");
 
 
     	int cnt = 0;
@@ -34,7 +34,7 @@ public class bringPaper {
 		}
     	/*
     	int cnt = 0;
-    	File f = new File("C://Users//chlgy//Downloads//0//10.1007_s13139-015-0373-x.html");
+    	File f = new File("C:\\2\\PMC6063317.html");
     	String content = Jsoup.parse(f, "UTF-8").toString();
     	content = Jsoup.parse(content).wholeText();
     	System.out.println(content);
@@ -76,6 +76,7 @@ public class bringPaper {
 		String abs = "bstract";
 		String ABS = "BSTRACT";
 		
+		
 		String Abstract = "no_Abstract";
 		
 		for(int i=0; i < text.length()-9; i++) {
@@ -98,20 +99,7 @@ public class bringPaper {
 							else break;
 						}
 						
-						if(text.substring(i+9,i+19).equals("Background")) {
-							Abstract = "";
-							for(int r=i+9; r<text.length(); r++) {	
-								if(r+13 == text.length()-1) {
-									Abstract = "no_Abstract";
-									return Abstract;
-								}
-								if(text.substring(r,r+12).equals("Introduction") || text.substring(r,r+12).equals("INTRODUCTION"))
-									break;
-								if(text.charAt(r) != '\n')
-									Abstract += text.charAt(r);
-							}
-							return Abstract;
-						}else if(text.substring(i+9,i+18).equals("Objective")) {
+						if(text.substring(i+9,i+19).equals("Background") || text.substring(i+9, i+19).equals("BACKGROUND")) {
 							Abstract = "";
 							for(int r=i+9; r<text.length(); r++) {	
 								if(r+13 == text.length()-1) {
@@ -125,9 +113,37 @@ public class bringPaper {
 							}
 							return Abstract;
 						}
-						else if(text.substring(i+9,i+16).equals("Purpose")) {
+						else if(text.substring(i+9,i+18).equals("Objective") || text.substring(i+9,i+18).equals("OBJECTIVE")) {
 							Abstract = "";
 							for(int r=i+9; r<text.length(); r++) {	
+								if(r+13 == text.length()-1) {
+									Abstract = "no_Abstract";
+									return Abstract;
+								}
+								if(text.substring(r,r+12).equals("Introduction") || text.substring(r,r+12).equals("INTRODUCTION"))
+									break;
+								if(text.charAt(r) != '\n')
+									Abstract += text.charAt(r);
+							}
+							return Abstract;
+						}
+						else if(text.substring(i+9,i+16).equals("Purpose") || text.substring(i+9,i+16).equals("PURPOSE")) {
+							Abstract = "";
+							for(int r=i+9; r<text.length(); r++) {	
+								if(r+13 == text.length()-1) {
+									Abstract = "no_Abstract";
+									return Abstract;
+								}
+								if(text.substring(r,r+12).equals("Introduction") || text.substring(r,r+12).equals("INTRODUCTION"))
+									break;
+								if(text.charAt(r) != '\n')
+									Abstract += text.charAt(r);
+							}
+							return Abstract;
+						}
+						else if(text.substring(i+9,i+21).equals("Introduction") || text.substring(i+9,i+21).equals("INTRODUCTION")) {
+							Abstract = "";
+							for(int r=i+9; r<text.length(); r++) {
 								if(r+13 == text.length()-1) {
 									Abstract = "no_Abstract";
 									return Abstract;
