@@ -31,9 +31,8 @@ public class bringPaper {
 			System.out.println(filenames[i] + " : " + a);
 			if(!a.equals("no_Abstract"))
 				cnt++;
-			
 		}
-		/*
+    	/*
     	int cnt = 0;
     	File f = new File("C://Users//chlgy//Downloads//0//10.1007_s13139-015-0373-x.html");
     	String content = Jsoup.parse(f, "UTF-8").toString();
@@ -47,6 +46,8 @@ public class bringPaper {
 		*/
     	System.out.println(cnt);
 	}
+
+		
 	
 	public static void SolrPutData(String filename, String abs) {
 		SolrInputDocument solrDoc = new SolrInputDocument();
@@ -85,11 +86,10 @@ public class bringPaper {
 			if (text.charAt(i) == 'A') {
 				int n=0;
 				for(int j=i+1; j<i+8; j++) { 
-					if(text.charAt(j) != abs.charAt(n) && text.charAt(j) != ABS.charAt(n))						
+					if(text.charAt(j) != abs.charAt(n) && text.charAt(j) != ABS.charAt(n))
 						break;
 					else n+=1;
 				}
-				
 				if(n == 7) {
 					if(text.charAt(i + 8) =='\n' || text.charAt(i+8) == ' ') {
 						for(int r=i+9; r<text.length(); r++) {	
@@ -164,6 +164,7 @@ public class bringPaper {
 							Abstract = Abs_temp;
 						}
 					}
+					
 				}
 			}
 		}
