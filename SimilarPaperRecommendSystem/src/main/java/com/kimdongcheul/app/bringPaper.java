@@ -19,8 +19,8 @@ public class bringPaper {
     public static SolrClient solr = new HttpSolrClient(url); 
 
     public static void AbstractExtraction() throws IOException {
-    	File files[] = getFileList("C:\\3");
-    	String filenames[] = getFileNameList("C:\\3");
+    	File files[] = getFileList("C:\\Users\\chlgy\\Downloads\\21");
+    	String filenames[] = getFileNameList("C:\\Users\\chlgy\\Downloads\\21");
 
 
     	int cnt = 0;
@@ -34,13 +34,11 @@ public class bringPaper {
 		}
     	/*
     	int cnt = 0;
-    	File f = new File("C:\\2\\PMC6063317.html");
+    	File f = new File("C:\\Users\\chlgy\\Downloads\\21\\PMC4479044.html");
     	String content = Jsoup.parse(f, "UTF-8").toString();
     	content = Jsoup.parse(content).wholeText();
-    	System.out.println(content);
 		String a = AbstractText(content);
-		System.out.println("-------------------------------------------------------");
-		System.out.println(a);
+		//System.out.println(a);
 		if(!a.equals("no_Abstract"))
 			cnt++;
 		*/
@@ -91,7 +89,31 @@ public class bringPaper {
 						break;
 					else n+=1;
 				}
+				
 				if(n == 7) {
+					
+					//for 'Go to:' paper 
+					int pre;
+					for(pre = i-1; pre > i-100; pre--) {	
+						if(text.charAt(pre) == '\n' || text.charAt(pre) == ' ' || text.charAt(pre) == '\t')
+							continue;
+						pre++;
+						break;
+					}
+					if(text.substring(pre-6, pre).equals("Go to:")) {
+						for(int pos = i+8; pos<text.length(); pos++) {
+							if(text.substring(pos, pos + 6).equals("Go to:"))
+								break;
+							if(text.charAt(pos) != '\n' && text.charAt(pos) != '\t')
+								Abs_temp += text.charAt(pos);
+						}
+
+						if(lengthCheck(Abs_temp)) {
+							Abstract = Abs_temp;
+						}
+						return Abstract;
+					}
+					
 					if(text.charAt(i + 8) =='\n' || text.charAt(i+8) == ' ') {
 						for(int r=i+9; r<text.length(); r++) {	
 							if(text.charAt(r) == '\n' || text.charAt(r) == ' ' || text.charAt(r) == '\t')
@@ -111,6 +133,9 @@ public class bringPaper {
 								if(text.charAt(r) != '\n')
 									Abstract += text.charAt(r);
 							}
+							if(!lengthCheck(Abstract)) {
+								Abstract = "no_Abstract";
+							}
 							return Abstract;
 						}
 						else if(text.substring(i+9,i+18).equals("Objective") || text.substring(i+9,i+18).equals("OBJECTIVE")) {
@@ -124,6 +149,9 @@ public class bringPaper {
 									break;
 								if(text.charAt(r) != '\n')
 									Abstract += text.charAt(r);
+							}
+							if(!lengthCheck(Abstract)) {
+								Abstract = "no_Abstract";
 							}
 							return Abstract;
 						}
@@ -139,6 +167,9 @@ public class bringPaper {
 								if(text.charAt(r) != '\n')
 									Abstract += text.charAt(r);
 							}
+							if(!lengthCheck(Abstract)) {
+								Abstract = "no_Abstract";
+							}
 							return Abstract;
 						}
 						else if(text.substring(i+9,i+21).equals("Introduction") || text.substring(i+9,i+21).equals("INTRODUCTION")) {
@@ -152,6 +183,9 @@ public class bringPaper {
 									break;
 								if(text.charAt(r) != '\n')
 									Abstract += text.charAt(r);
+							}
+							if(!lengthCheck(Abstract)) {
+								Abstract = "no_Abstract";
 							}
 							return Abstract;
 						}
@@ -167,20 +201,6 @@ public class bringPaper {
 							Abstract = Abs_temp;
 						}
 					}
-					else if(text.substring(i-6, i).equals("Go to:")) {
-						int pos = i + 8;
-						for(int r = i+8; i<text.length(); i++) {
-							if(text.substring(pos, pos + 6).equals("Go to:"))
-								break;
-							Abs_temp += text.charAt(r);
-							pos += 1;
-						}
-
-						if(lengthCheck(Abs_temp)) {
-							Abstract = Abs_temp;
-						}
-					}
-					
 				}
 			}
 		}
@@ -199,5 +219,4 @@ public class bringPaper {
 		String[] filenames = dir.list();
 		return filenames;
 	}
-	//test
 }
