@@ -37,7 +37,7 @@ public class HomeController {
 		
 		model.addAttribute("serverTime", formattedDate );
 		
-		bringPaper.AbstractExtraction();
+		ExtractAbstract.AbstractExtraction();
 		
 		return "home";
 	}
