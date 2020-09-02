@@ -37,9 +37,29 @@ public class HomeController {
 		
 		model.addAttribute("serverTime", formattedDate );
 		
-		ExtractAbstract.AbstractExtraction();
+		//ExtractAbstract.AbstractExtraction();
 		
 		return "home";
 	}
+	
+	@RequestMapping(value = "/home", method = RequestMethod.POST)
+	public String h(Locale locale, Model model) throws IOException {
+		
+		String str = "";
+		
+		logger.info("asdasdasdasdasd", locale);
+		
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		
+		String formattedDate = dateFormat.format(date);
+		
+		model.addAttribute("serverTime", formattedDate );
+		
+		//ExtractAbstract.AbstractExtraction();
+		
+		return "home";
+	}
+
 	
 }
