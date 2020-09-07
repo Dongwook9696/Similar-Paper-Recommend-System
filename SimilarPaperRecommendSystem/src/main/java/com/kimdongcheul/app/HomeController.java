@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.solr.client.solrj.SolrServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -22,9 +23,10 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 * @throws IOException 
+	 * @throws SolrServerException 
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) throws IOException {
+	public String home(Locale locale, Model model) throws IOException, SolrServerException {
 		
 		String str = "";
 		
@@ -39,6 +41,7 @@ public class HomeController {
 		
 		//ExtractAbstract.AbstractExtraction();
 		
+		ExtractNoun.getAbstract();
 		return "home";
 	}
 	
