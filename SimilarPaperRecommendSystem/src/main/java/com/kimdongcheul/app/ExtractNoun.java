@@ -1,6 +1,7 @@
 package com.kimdongcheul.app;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.solr.client.solrj.SolrClient;
@@ -22,15 +23,29 @@ public class ExtractNoun {
 
     public static void extractNoun(String abs) throws SolrServerException, IOException {
 		EnPosta posta = new EnPosta();
-		posta.load("C:\\Users\\chlgy\\Downloads\\model");
+		posta.load("C:\\Users\\hdw96\\Downloads\\model_0.5");
 		posta.buildFailLink();
 		
 		List<String> res = posta.analyze(abs);
 		
+		ArrayList<String> str = new ArrayList<String>();
 		for(String result : res) {
-			System.out.println(result);
+			if(result.charAt(0) >= 48 && result.charAt(0) <=57)
+				continue;
+			else if(result.substring(result.length() - 3, result.length()).equals("NNS")) {
+				if(result.subSequence(0, result.length() - 4).length() != 1) 
+					str.add(result.substring(0, result.length() - 4));
+			}
+			else if(result.substring(result.length() - 2, result.length()).equals("NN")) {
+				if(result.subSequence(0, result.length() - 3).length() != 1) 
+					str.add(result.substring(0, result.length() - 3));
+			}
 		}
-		System.out.println("-----------------------------------------------------------------");
+		System.out.println("----------------------------------------");
+
+		for(int i=0 ; i<str.size();i++) {
+			System.out.println(str.get(i));
+		}
 	}
     
     public static void getAbstract() throws SolrServerException, IOException {
@@ -41,11 +56,16 @@ public class ExtractNoun {
 		QueryResponse rsp = solr.query(query);
 		SolrDocumentList docs = rsp.getResults();
 		
-		for(int i=0 ; i<10;i++)
-		{
-			String abs = String.valueOf(docs.get(i).getFieldValue("abstract")) ;
-			extractNoun(abs);
-		}
+		String abs = String.valueOf(docs.get(0).getFieldValue("abstract")) ;
+		extractNoun(abs);
+		
+//		System.out.println(docs.getNumFound());
+//		for(int i=0 ; i<10;i++)
+//		{
+//			String abs = String.valueOf(docs.get(i).getFieldValue("abstract")) ;
+//			extractNoun(abs);
+//			System.out.println("-----------------------------------------------------------------" + i);
+//		}
 		
     }
 
