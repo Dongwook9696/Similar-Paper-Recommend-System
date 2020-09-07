@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.solr.client.solrj.SolrServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -22,9 +23,10 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 * @throws IOException 
+	 * @throws SolrServerException 
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) throws IOException {
+	public String home(Locale locale, Model model) throws IOException, SolrServerException {
 		
 		String str = "";
 		
@@ -37,9 +39,30 @@ public class HomeController {
 		
 		model.addAttribute("serverTime", formattedDate );
 		
-		ExtractAbstract.AbstractExtraction();
+		//ExtractAbstract.AbstractExtraction();
+		
+		ExtractNoun.getAbstract();
+		return "home";
+	}
+	
+	@RequestMapping(value = "/home", method = RequestMethod.POST)
+	public String h(Locale locale, Model model) throws IOException {
+		
+		String str = "";
+		
+		logger.info("asdasdasdasdasd", locale);
+		
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		
+		String formattedDate = dateFormat.format(date);
+		
+		model.addAttribute("serverTime", formattedDate );
+		
+		//ExtractAbstract.AbstractExtraction();
 		
 		return "home";
 	}
+
 	
 }

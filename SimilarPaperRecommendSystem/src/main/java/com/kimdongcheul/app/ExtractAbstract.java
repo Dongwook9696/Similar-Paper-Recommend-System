@@ -19,8 +19,8 @@ public class ExtractAbstract {
     public static SolrClient solr = new HttpSolrClient(url); 
 
     public static void AbstractExtraction() throws IOException {
-    	File files[] = getFileList("C:\\Users\\hdw96\\Downloads\\12");
-    	String filenames[] = getFileNameList("C:\\Users\\hdw96\\Downloads\\12");
+    	File files[] = getFileList("C:\\10");
+    	String filenames[] = getFileNameList("C:\\10");
 
 
     	int cnt = 0;
