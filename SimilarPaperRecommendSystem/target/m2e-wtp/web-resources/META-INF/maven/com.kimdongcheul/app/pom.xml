@@ -32,6 +32,12 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.ansj</groupId>
+			<artifactId>tree_split</artifactId>
+			<version>1.0.1</version>
+		</dependency>
 				
 		<!-- https://mvnrepository.com/artifact/org.apache.solr/solr-solrj -->
 		<dependency>
@@ -39,6 +45,14 @@
 		    <artifactId>solr-solrj</artifactId>
 		    <version>6.3.0</version>
 		</dependency>
+		
+		<!-- Jsoup -->
+		<dependency>
+		    <groupId>org.jsoup</groupId>
+		    <artifactId>jsoup</artifactId>
+		    <version>1.11.2</version>
+		</dependency>
+		
 		
 		<!-- AspectJ -->
 		<dependency>
