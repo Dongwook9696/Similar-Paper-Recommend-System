@@ -22,7 +22,7 @@ public class ExtractNoun {
 
     public static ArrayList<String> extractNoun(String abs) throws SolrServerException, IOException {
 		EnPosta posta = new EnPosta();
-		posta.load("C:\\Users\\hdw96\\Downloads\\model_0.5");
+		posta.load("C:\\Users\\chlgy\\Downloads\\model");
 		posta.buildFailLink();
 		
 		List<String> res = posta.analyze(abs);
