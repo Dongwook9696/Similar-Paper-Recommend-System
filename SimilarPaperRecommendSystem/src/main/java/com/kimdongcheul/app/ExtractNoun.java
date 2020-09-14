@@ -22,7 +22,7 @@ public class ExtractNoun {
 
     public static ArrayList<String> extractNoun(String abs) throws SolrServerException, IOException {
 		EnPosta posta = new EnPosta();
-		posta.load("C:\\Users\\chlgy\\Downloads\\model");
+		posta.load("C:\\Users\\hdw96\\Downloads\\model_0.5");
 		posta.buildFailLink();
 		
 		List<String> res = posta.analyze(abs);
@@ -40,12 +40,13 @@ public class ExtractNoun {
 					str.add(result.substring(0, result.length() - 3));
 			}
 		}
-		System.out.println("----------------------------------------");
+		System.out.println("---------------------------------------------");
 
-		return str;
 //		for(int i=0 ; i<str.size();i++) {
-//			System.out.println(str.get(i));
+//			System.out.print(str.get(i) + " ");
 //		}
+		return str;
+		
 	}
     
     public static ArrayList<String> getAbstract(int i) throws SolrServerException, IOException {
