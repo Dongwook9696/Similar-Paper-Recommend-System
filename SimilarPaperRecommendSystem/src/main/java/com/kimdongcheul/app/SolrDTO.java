@@ -1,4 +1,4 @@
-package com.kimdongcheul.app.solr.db;
+package com.kimdongcheul.app;
 
 public class SolrDTO {
 	private String id;

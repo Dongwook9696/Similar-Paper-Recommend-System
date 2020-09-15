@@ -4,29 +4,5 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	
-	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-		<property name="driverClass" value="org.mariadb.jdbc.Driver" />
-		<property name="url" value="jdbc:mariadb://localhost:3306/paper" />
-		<property name="username" value="root" />
-		<property name="password" value="ehddnr741" />
-	</bean>
-
-
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="configLocation" value="classpath:util/SqlMapConfig.xml" />
-		<property name="mapperLocations" value="classpath*:sql/*.xml" />
-	</bean>
-	
-	<bean id ="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
-		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
-	</bean>
-	
-	<!-- mybatis ORM DB 연동 프레임웍 연결 및 종료(close) -->
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
+		
 </beans>

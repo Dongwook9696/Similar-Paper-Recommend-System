@@ -22,7 +22,7 @@ public class getCoineSimilarity {
 	public static String url = "http://164.125.35.25:8983/solr/abstract";  
     public static SolrClient solr = new HttpSolrClient(url);
     
-    static double similarity = 0.7;
+    double similarity = 0.5;
 	DocVector[] docVector;
     static Map<String,Integer> allterms = new HashMap<String,Integer>();
     
@@ -59,12 +59,8 @@ public class getCoineSimilarity {
        			while(iterator.hasNext()){
        				next = iterator.next();
        				if(next.getValue() == 1) continue;
-       				System.out.print(next.getKey() + " ");
-
        				arrTerms.put(next.getKey(), pos_i++);
        			}
-   				System.out.println();
-
        			str.clear();
 	       		
         	   
@@ -84,34 +80,23 @@ public class getCoineSimilarity {
 
               			while(iterator.hasNext()){
               				next = iterator.next() ;
-              				if(next.getValue() == 1) continue;
-              				System.out.print(next.getKey() + " ");
-              				
               				arrTerms2.put(next.getKey(), pos_j++);
-              				
               			}
-              		    System.out.println();
-            		    allterms = arrTerms2;
+
+            		   allterms = arrTerms2;
             		   
 	                   DocVector docVectori = iGetDocumentVector(String.valueOf(docs.get(idocId).getFieldValue("id")));        
 	            	   DocVector docVectorj = jGetDocumentVector(String.valueOf(docs.get(jdocId).getFieldValue("id")));
 	            	   
-//	            	   double cosineSimilarity = cosineSimilarity(docVectori, docVectorj);
-	            	   double TS_SS_Similarity = Vector_Similarity.TS_SS(docVectori, docVectorj);
-	            	   double TS_SS_Similarity1 = Vector_Similarity.Cosine(docVectori, docVectorj);
-	            	   double TS_SS_Similarity2 = Vector_Similarity.Euclidean(docVectori, docVectorj);
+	            	   double cosineSimilarity = cosineSimilarity(docVectori, docVectorj);
 
-//	            	   if(cosineSimilarity>similarity && cosineSimilarity<1.0)
-//		    		   {
-	    			   System.out.println(idocId  +" 번째 눈문과 " + jdocId +" 번째 논문의 TS_SS 유사도 : " + TS_SS_Similarity);
-	    			   System.out.println(idocId  +" 번째 눈문과 " + jdocId +" 번째 논문의 COS 유사도 : " + TS_SS_Similarity1);
-	    			   System.out.println(idocId  +" 번째 눈문과 " + jdocId +" 번째 논문의 ED 유사도 : " + TS_SS_Similarity2);
-
-//		    		   }
+		    		   //if(cosineSimilarity>similarity && cosineSimilarity<1.0)
+		    		   //{
+		    			   System.out.println("서로 유사한 논문입니다. 유사도 : " + cosineSimilarity);
+		    		   //}
 
 		    		   docVectorj = null ;
 		    		   docVectori = null ;
-		    		   str.clear();
             	   }
             	   catch(Exception e)
             	   {
