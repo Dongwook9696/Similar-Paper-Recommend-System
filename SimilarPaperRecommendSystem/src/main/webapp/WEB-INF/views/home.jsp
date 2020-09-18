@@ -14,13 +14,12 @@
 
 	<form action ="./abstractList">
 	
-	PAPER : <input type = "text" name = "paper">
+	PAPER : <input type = "text" name = "paper_id" id = "paper_id">
 	<button type = "submit" >SEARCH</button>
 	
 	</form>
 	
 	<table border="1" style="width:600px">
-	    <caption>게시판</caption>
 	    <colgroup>
 	        <col width='8%' />
 	        <col width='*%' />
@@ -29,19 +28,19 @@
 	    </colgroup>
 	    <thead>
 	        <tr>
-	            <th>id</th>
-	            <th>abstract</th>
+	            <th></th>
+	            <th>유사 논문</th>
 	        </tr>
 	    </thead>
 	    <tbody>
-	        <c:forEach var="listview" items="${listview}" varStatus="status">   
+	        <c:forEach var="id" items="${listview}" varStatus="status">   
 	            <tr>
-	                <td><c:out value="${listview.id}"/></td>
-	                <td><c:out value="${listview.abstract_}"/></td>
+	            	<th>${status.count}</th>
+	            	<th><a href = "./showAbstract?id=${id}"><c:out value="${id}"/></a></th>
 	            </tr>
 	        </c:forEach>
 	    </tbody>
-		</table> 
+		</table>
 	
 
 

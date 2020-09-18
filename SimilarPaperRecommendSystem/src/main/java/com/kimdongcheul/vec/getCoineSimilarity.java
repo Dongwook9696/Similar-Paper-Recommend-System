@@ -1,6 +1,11 @@
 package com.kimdongcheul.vec;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,7 +34,12 @@ public class getCoineSimilarity {
     static MapCount<String> map_i = new MapCount<>();
     static MapCount<String> map_j = new MapCount<>();
 	
-	public static void getCosineSimilarity() throws IOException, SolrServerException
+    static int [][]similars = new int[500][500];
+    
+    
+
+    
+	public static int [][] getCosineSimilarity() throws IOException, SolrServerException
     {
 
 		SolrQuery query = new SolrQuery();
@@ -41,8 +51,13 @@ public class getCoineSimilarity {
 		
        try
        {
-    	   long document_cnt = docs.getNumFound();
-           for (int idocId = 0; idocId < document_cnt; idocId++)
+    	  OutputStream file = new FileOutputStream("C:\\Users\\chlgy\\Downloads\\similarity");
+	         
+
+	        
+	        long document_cnt = docs.getNumFound();
+    	   
+          for (int idocId = 3; idocId < 500; idocId++)
            { 
         	   HashMap<String,Integer> arrTerms = new HashMap<String,Integer>();
         	   int pos_i = 0;
@@ -58,15 +73,15 @@ public class getCoineSimilarity {
 
        			while(iterator.hasNext()){
        				next = iterator.next();
-       				if(next.getValue() == 1) continue;
        				arrTerms.put(next.getKey(), pos_i++);
        			}
        			str.clear();
 	       		
-        	   
-               for (int jdocId = idocId ; jdocId < document_cnt; jdocId++)
+       			int cnt = 0;
+               for (int jdocId = 346; jdocId < 500; jdocId++)
                {
             	   int pos_j = 0;
+            	   
             	   try
             	   {
 	            	   HashMap<String,Integer> arrTerms2 = new HashMap<String,Integer>();
@@ -89,14 +104,23 @@ public class getCoineSimilarity {
 	            	   DocVector docVectorj = jGetDocumentVector(String.valueOf(docs.get(jdocId).getFieldValue("id")));
 	            	   
 	            	   double cosineSimilarity = cosineSimilarity(docVectori, docVectorj);
-
-		    		   //if(cosineSimilarity>similarity && cosineSimilarity<1.0)
-		    		   //{
-		    			   System.out.println("서로 유사한 논문입니다. 유사도 : " + cosineSimilarity);
-		    		   //}
+	            	   System.out.println("i : " + idocId + ", j : " + jdocId + " = " + cosineSimilarity);
+		    		   if(cosineSimilarity > 0.75 && cosineSimilarity != 1.0)
+		    		   {
+		    			   //similars[idocId][jdocId] = 1;
+		    			   //similars[jdocId][idocId] = 1;
+		    			   
+		    			   String s =" " + idocId + "," + jdocId;
+		    			   byte[] by = s.getBytes();
+		    			   file.write(by);
+		    			   cnt++;
+		    		   }
 
 		    		   docVectorj = null ;
 		    		   docVectori = null ;
+		    		   
+		    		   str.clear();
+		    		   if(cnt > 10) break;
             	   }
             	   catch(Exception e)
             	   {
@@ -104,12 +128,13 @@ public class getCoineSimilarity {
             	   }
                }
            }
+           
        }
        catch(Exception e)
        {
 		   System.out.println("FindPaperSimilarity consinesimilarity:"+e.toString());
        }
-
+       return similars;
 
     }   
     public static double cosineSimilarity(DocVector d1,DocVector d2) 
@@ -153,11 +178,8 @@ public class getCoineSimilarity {
 
 		while(iterator.hasNext()){
 			next = iterator.next();
-
 			docvect.setEntry(next.getKey(), next.getValue());
-
             docvect.setDocId(docId);
-
 		}
 
         docvect.normalize();
